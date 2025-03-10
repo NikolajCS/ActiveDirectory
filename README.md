@@ -25,7 +25,7 @@ This tutorial outlines the implementation of on-premises Active Directory within
 - Windows Server 2022
 - Windows 10 (21H2)
 
-<h2>Pre Configuration Steps</h2>
+<h2>Preparing Active Directory </h2>
 
 - Step 1 Create a ressource group + a virtual network connect the ressource group to the Virtual Network
 - Step 2 Create a Domain Controller VM > I will name it dc-1 > Put it in the same ressource group you just created, choose Windows server 2022
@@ -55,6 +55,57 @@ We will now attempt to ping dc-1's private IP address from client-1 and make sur
 We can also check that the DNS server matches dc-1's private IP address > Within Client-1 > Powershell > command "ipconfig /all" > Enter > The DNS server of Client-1 should be dc-1's private IP address
 
 ![image](https://github.com/user-attachments/assets/c438eb19-6298-4b24-8954-034f02c166d2)
+
+<h2>Deployment and Configuration Steps</h2>
+
+Log into dc-1 > Open Server Manager > Add roles and features > Press next until you get to "Server Roles" > Check "Active Directory Domain Services" > Next > Next > In "Confirmation" you can check "Restart the destination server automatically if required" > Install
+
+![image](https://github.com/user-attachments/assets/ccc776ec-6ae4-488f-b139-7589a81a260e) 
+
+We will now promote dc-1 to become an actual Domain Controller > Inside Server Manager on the top rightside click on notifications (Flag with a yellow triangle) > "Promote this server to a domain controller" 
+
+![image](https://github.com/user-attachments/assets/2bd6d0a2-0193-4f32-abb3-be5c33f8d961)
+
+Add a new forest > Name it "mydomain.com" > Next > Choose password > DNS Options > Uncheck "Create DNS delegation" > Press next until you get to "Prerequisites Check" > Install > You will be disconnected from the VM when the install is finished > Now that we have made the Virtual Machine into a Domain Controller you now have 2 options when you log into dc-1 > You can log in as "local user" the same way you did before. But if you want to login in as a domain user you need to type > mydomain.com\username or MYDOMAIN\username with the same password.
+
+Creating a Domain Admin, Employees and Admins folder: Open the Windows serach bar and type "Active Directory Users and Computers"
+
+![image](https://github.com/user-attachments/assets/58d4300a-eb96-4942-8e73-dc4df8cb99d1)
+
+Right click on "mydomain.com" > New > Organizational Unit > Name it _EMPLOYEES > OK 
+
+![image](https://github.com/user-attachments/assets/8341c632-508a-414c-9187-f6df313e2261)
+
+Create another Organizational Unit > Name it _ADMINS > OK 
+
+![image](https://github.com/user-attachments/assets/2d4a19ec-4b8a-4335-b1b1-1ff86c051cbc)
+
+Create an Admin user > Right Click Admin folder > New > User > I will name my admin Jacob
+
+![image](https://github.com/user-attachments/assets/0a61dce0-d0f1-4902-af18-76d589c1651a)
+
+Making Jacob a Domain Admin > Admin Folder > Right click on Jacob (or whoever you want to make a Domain Admin) > Properties > Member of > Add > Type "domain admin" > Check Names > OK > Apply > OK > Now the chosen account is a Domain Admin
+
+![image](https://github.com/user-attachments/assets/4572a56d-1cff-417d-bcf2-3c60cbe5659a)
+
+Sign out of dc-1, we will now log into the Domain Controller as the new admin account we just created > So I will log in as: MYDOMAIN\jacob_admin if it is not letting you log in you can try mydomain.com@name_admin instead. If you want to check that you are using the right login you can check it inside Active Directory Users and Computers > Admin folder > right click the admin account > properties > Account > In here you can check the correct logon name
+
+![image](https://github.com/user-attachments/assets/24f555b0-beff-4e82-a734-69f779b28504)
+
+Log into dc-1 as the new admin. We will now make client-1 join the domain. Sign into client-1 with the original local admin account > right click the Windows icon > System > You should be in the "About" > Under "Related settings -> Rename this pc (Advanced) > Change > Under "Member of" change to Domain > Type mydomain.com > ok > You will need to use your domain admin account login to give client-1 permission to join the domain > You should then get a pop up message that says that you have joined the domain
+
+
+![image](https://github.com/user-attachments/assets/9982e6f6-0b8e-4de6-b7cc-8a64ba7a9a35)
+
+We will now verify that client-1 has joined the domain > Log into dc-1 > Open Active Directory Users and Computers > Expand mydomain.com > Click on Computer > In here you should see client-1
+
+![image](https://github.com/user-attachments/assets/842f3682-cc81-43c2-b0f1-04232321e1d2)
+
+We can make a Client folder and drag client-1 into it > right click mydomain.com > New > Organizational Unit > I will name it _CLIENTS > Go to Computers > Click on client-1 and drag it into the new folder "_CLIENTS" > You will get a pop up message, press yes.
+
+![image](https://github.com/user-attachments/assets/d1e38753-6b42-4de4-9665-477b6a9f40be)
+
+
 
 
 
