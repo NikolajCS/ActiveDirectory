@@ -151,6 +151,10 @@ Observing Logs: Log into client-1 > Open windows search bar and type "Event View
 ![image](https://github.com/user-attachments/assets/c480fea8-8828-4b69-9497-47fd60ee2f1c)
 
 
+
+
+
+
 <p>
 <img src="https://i.imgur.com/DJmEXEB.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
 </p>
