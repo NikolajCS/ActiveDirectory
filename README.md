@@ -124,7 +124,31 @@ You can sign out of client-1 > login my account will be MYDOMAIN\bec.bira > Pass
 
 ![image](https://github.com/user-attachments/assets/8b675618-bd86-44b5-9c90-106901689bea)
 
-This is will be the end. 
+<h2>Group Policy and Managing Accounts</h2>
+
+First we will configure a failed password limit > Log in to dc-1 > windows key + r and type gpmc.msc > Expand "Forest: mydomain.com > Expand "Domains" > Expand mydomain.com > Highlight "Default Domain Policy and right click on it > edit 
+
+  ![image](https://github.com/user-attachments/assets/0392e0a8-8e4b-4d22-8757-57e299491de6)
+
+Expand "Computer Configuration" > Policies > Windows Settings > Security Settings > Account Policies > Account Lockout Policy > Account lockout threshhold > I will set mine to 5 attemps 
+
+![image](https://github.com/user-attachments/assets/1eb6bda8-489f-419e-b7a6-e71b11348ee1)
+
+It will take some time before the policy is automatically updated and propegated to all the computers. But we can also force an immediate update to a specific pc > Log in to client-1 as an admin > I will log in as MYDOMAIN\jacob_admin > Open cmd and type the commnad: gpupdate /force 
+
+![image](https://github.com/user-attachments/assets/7b414396-97ba-4b36-b8ee-2f1a83f5cf8a)
+
+I will choose a random user from the Domain and fail 5 logins to client-1, and then we will unlock the account > login to dc-1 and find the specific user that has been locked out under _EMPLOYEES > right click the user > Properties > Account > Check "Unlock account", hit apply and ok
+
+![image](https://github.com/user-attachments/assets/690a7231-5d24-4054-a843-d620e784e656)
+
+Resetting passwords > Find the individual user > right click > reset password > OK: You can also disable and enable accounts the same way > Right click user > "Disable", "Enable" 
+
+![image](https://github.com/user-attachments/assets/54c1dd4c-9ca2-4a8d-8acd-9dd9ca1a694a)
+
+Observing Logs: Log into client-1 > Open windows search bar and type "Event Viewer", (if you are not logged in as an administrator you will need to run the program as an administrator to get full access > Expand "Windows Logs > Securty > In here you can see all failed/successfull logon attemps and what user failed the logon. So in my case you can see "Audit failure" which means a failed login and you can see the user baq.porin failed the logon. 
+
+![image](https://github.com/user-attachments/assets/c480fea8-8828-4b69-9497-47fd60ee2f1c)
 
 
 <p>
